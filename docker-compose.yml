@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  comagency-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api
+    hostname: api
+    ports:
+      - "4730:4730"
+    volumes:
+      - ./cookies.json:/app/cookies.json
+      - ./app:/app/app
+      - ./app/mocks:/app/mocks
+    restart: unless-stopped
