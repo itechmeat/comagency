@@ -13,7 +13,7 @@ router = APIRouter()
     description="Unfavorite a tweet by its ID"
 )
 @handle_twitter_endpoint("unfavorite tweet")
-async def favorite_tweet(tweet_id: int):
+async def unlike_tweet(tweet_id: int):
     logger.info(f"🎯  Attempting to unfavorite tweet {tweet_id}")
 
     async def do_favorite():
