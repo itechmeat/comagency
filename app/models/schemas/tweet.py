@@ -29,4 +29,4 @@ class TweetThread(BaseModel):
 
 class CreateTweetRequest(BaseModel):
     text: str
-    reply_to: Optional[str] = None 
+    reply_to: Optional[str] = None
