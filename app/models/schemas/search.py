@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import List
-  
+
 class TweetData(BaseModel):
     tweet_id: str
     tweet_user_name: str

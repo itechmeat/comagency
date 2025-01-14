@@ -1,11 +1,7 @@
-from datetime import datetime
 from twikit import Client
 from app.config import get_twitter_credentials
-import logging
 import asyncio
-from typing import Optional
 import os
-import json
 from loguru import logger
 
 USE_TWITTER_MOCKS = os.getenv("USE_TWITTER_MOCKS", "false").lower() == "true"

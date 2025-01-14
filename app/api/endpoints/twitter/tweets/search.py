@@ -19,7 +19,14 @@ async def get_tweets(params: SearchParams | TimelineParams):
         else:
             return await twitter_client.client.get_timeline()
 
-@router.post("/tweets/search", response_model=SearchResponse)
+@router.post(
+    "/tweets/search",
+    tags=["tweets"],
+    response_model=SearchResponse,
+    summary="Search for tweets",
+    description="Search for tweets based on a query"
+)
+@handle_twitter_endpoint("search tweets")
 async def search_tweets(params: SearchParams):
     tweet_count = 0
     tweets = None

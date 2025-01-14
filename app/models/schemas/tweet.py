@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 from typing import Optional, List
-from datetime import datetime
 
 class TweetAuthor(BaseModel):
     id: str
@@ -30,3 +29,7 @@ class TweetThread(BaseModel):
 class CreateTweetRequest(BaseModel):
     text: str
     reply_to: Optional[str] = None
+
+class HandleMentionLLMResponse(BaseModel):
+    target_tweet_id: str
+    reply_text: str

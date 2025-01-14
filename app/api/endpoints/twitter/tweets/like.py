@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from app.models.schemas.tweet import TweetDetails
 from loguru import logger
 from app.utils.twitter import handle_twitter_request, twitter_client
 from app.utils.twitter.decorators import handle_twitter_endpoint
@@ -19,6 +18,6 @@ async def like_tweet(tweet_id: int):
     async def do_favorite():
         return await twitter_client.client.favorite_tweet(tweet_id)
 
-    result = await handle_twitter_request(do_favorite)
+    await handle_twitter_request(do_favorite)
     logger.info(f"💜  Successfully favorited tweet {tweet_id}")
     return {"status": "success", "tweet_id": tweet_id}

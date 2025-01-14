@@ -6,7 +6,6 @@ from twikit import (
     ServerError, AccountLocked
 )
 from app.utils.twitter.tweet_utils import twitter_client
-from loguru import logger
 
 ExecutionStopError = (asyncio.CancelledError, KeyboardInterrupt, SystemError)
 
