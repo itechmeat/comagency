@@ -22,18 +22,17 @@ class ContextTweet(BaseModel):
     author_name: str
 
 @router.post(
-    "/tasks/reply-tweet",
+    "/tasks/reply-mention",
     tags=["tasks"],
     response_model=TweetDetails,
     summary="Process a Twitter mention and generate a reply",
     description="This endpoint processes a Twitter mention, fetches the context, and uses an LLM to generate a relevant reply."
 )
-@handle_twitter_endpoint("reply tweet")
-async def reply_tweet(request: HandleMentionRequest):
+@handle_twitter_endpoint("reply mention")
+async def reply_mention(request: HandleMentionRequest):
     tweet_id = request.tweet_id
     tweet_with_mention = await get_tweet_by_id(tweet_id)
     logger.info(f"✅  Successfully fetched mentioned tweet {tweet_with_mention.id}")
-    logger.info(tweet_with_mention.text)
 
     # Initialize context with the current tweet
     context = [{
@@ -84,6 +83,12 @@ Your response should be a JSON object only with the following fields:
 
 The required response format is:
 {json.dumps({"target_tweet_id": "1234567890", "reply_text": "Hello, how are you?"})}
+
+The reply_text should be a direct response to the chosen tweet that:
+1. Builds upon or challenges the specific point made in the original tweet
+2. Brings new, non-obvious technical insights relevant to the tweet's context
+3. Shows deep expertise while maintaining conversational tone
+4. Must be between 100 and 280 characters
 
 The answer must contain only the object and nothing else, this is critically important.
 """
