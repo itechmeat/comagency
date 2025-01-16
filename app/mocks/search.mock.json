@@ -1,0 +1,117 @@
+{
+  "type": "model_attributes_type",
+  "loc": ["response"],
+  "msg": "Input should be a valid dictionary or object to extract fields from",
+  "input": [
+    {
+      "tweet_id": "1878766496148574406",
+      "tweet_user_name": "Illia (root.near) (🇺🇦, ⋈)",
+      "tweet_user_nick": "ilblackdragon",
+      "text": "Example of what you can do with @near_ai agents is implementing an AMM pool, where the \"A\" stands for Agent.\n\nThis agent can have arbitrary sophisticated logic for how to respond to trades. It can be quote prices based on what is market price or check @_kaitoai and price higher",
+      "created_at": "Mon Jan 13 11:30:13 +0000 2025",
+      "retweets": 6,
+      "likes": 30,
+      "photo_urls": [],
+      "tweet_lang": "en"
+    },
+    {
+      "tweet_id": "1878760964591394898",
+      "tweet_user_name": "Sherif | DeFi",
+      "tweet_user_nick": "SherifDefi",
+      "text": "What if AI could build empires and generate wealth through its own creations?\n\nWhat if your IP could become a dynamic, yield-bearing asset?\n\n💠 @StoryProtocol's new podcast with @jasonjzhao explores these groundbreaking questions and more!\n\nHear about the future of AI agents, the",
+      "created_at": "Mon Jan 13 11:08:14 +0000 2025",
+      "retweets": 5,
+      "likes": 84,
+      "photo_urls": [],
+      "tweet_lang": "en"
+    },
+    {
+      "tweet_id": "1878760162821103893",
+      "tweet_user_name": "laurence",
+      "tweet_user_nick": "functi0nZer0",
+      "text": "I was building stuff with “AI agents” as integral components while DeFi summer was being born and well before the advent of useful LLMs so I’ll happily have a fight with anyone about what they actually are and do\n\nYour quirked up reply bot is not it https://t.co/7mvre2aNta",
+      "created_at": "Mon Jan 13 11:05:03 +0000 2025",
+      "retweets": 2,
+      "likes": 33,
+      "photo_urls": ["https://pbs.twimg.com/media/GhKyaDSWkAAmqJ5.jpg"],
+      "tweet_lang": "en"
+    },
+    {
+      "tweet_id": "1878757968688357548",
+      "tweet_user_name": "Satoshi Flipper",
+      "tweet_user_nick": "SatoshiFlipper",
+      "text": "'AI agents' Category is going to be its own ALT Season when we recover, geezus so oversold https://t.co/uHg0JJNb7t",
+      "created_at": "Mon Jan 13 10:56:20 +0000 2025",
+      "retweets": 2,
+      "likes": 57,
+      "photo_urls": ["https://pbs.twimg.com/media/GhKwL6fXAAAYA4_.png"],
+      "tweet_lang": "en"
+    },
+    {
+      "tweet_id": "1878757213688541517",
+      "tweet_user_name": "Cookie DAO 🍪",
+      "tweet_user_nick": "cookiedotfun",
+      "text": "Agents built on @AIAgentLayer are now auto-listed on https://t.co/lR5PC53eTO.\n\nNo application required.\n\nDeploy your agent on AI Agent Layer, and it will show in our AI Agents Index instantly. https://t.co/DDvGRjoBT4",
+      "created_at": "Mon Jan 13 10:53:20 +0000 2025",
+      "retweets": 21,
+      "likes": 130,
+      "photo_urls": ["https://pbs.twimg.com/media/GhKvsxAasAARhzS.jpg"],
+      "tweet_lang": "en"
+    },
+    {
+      "tweet_id": "1878757087460966647",
+      "tweet_user_name": "Mark",
+      "tweet_user_nick": "MRRydon",
+      "text": "Funny how it took AI agents entering the conversation themselves (on X) to get the narrative pumping. It's one of the reasons we're bullish on @AmAmsentinel and are excited to see them use our (@AethirCloud) GPUs 🔥",
+      "created_at": "Mon Jan 13 10:52:49 +0000 2025",
+      "retweets": 46,
+      "likes": 103,
+      "photo_urls": [],
+      "tweet_lang": "en"
+    },
+    {
+      "tweet_id": "1878756642885615687",
+      "tweet_user_name": "InitVerse | Testnet🔛",
+      "tweet_user_nick": "InitVerse",
+      "text": "AI Agents x #Privacy in InitVerse\n🤖 NVIDIA’s CEO predicts AI Agents will shape a trillion-dollar industry—but privacy is key!\nWith #INIChain, users stay in control:\n🔒 Your data is secure.\n🚀 Projects gain anonymized insights for smarter AI training.The future is balanced. 🌐",
+      "created_at": "Mon Jan 13 10:51:03 +0000 2025",
+      "retweets": 185,
+      "likes": 215,
+      "photo_urls": [],
+      "tweet_lang": "en"
+    },
+    {
+      "tweet_id": "1878747630597247366",
+      "tweet_user_name": "UXUY | Free Trading Gas！",
+      "tweet_user_nick": "uxuycom",
+      "text": "🎉 Great news! We’ve risen to become the No. 1 crypto wallet on Telegram!\n\n🚀 With over 7.7M monthly active users and 1.4M+ traders, this is a milestone worth celebrating! 🔥\n\n💪 Empowered by AI Agents, we’re excited to explore endless possibilities in social trading.\n\n👉 Get https://t.co/M6zLqWUDdF",
+      "created_at": "Mon Jan 13 10:15:15 +0000 2025",
+      "retweets": 34,
+      "likes": 264,
+      "photo_urls": ["https://pbs.twimg.com/media/GhKm-VJaoAAbcFJ.jpg"],
+      "tweet_lang": "en"
+    },
+    {
+      "tweet_id": "1878746776435392668",
+      "tweet_user_name": "Token Sensei",
+      "tweet_user_nick": "TheTokenSensei",
+      "text": "It's now easier than ever to get into @GnonOnSolana \n\nA lightweight, extensible framework for building AI agents that interact on https://t.co/IkOLTUfxik. Design and deploy custom AI agents in minutes with minimal configuration.\n\nhttps://t.co/s6LyxSS1cO\n\ngit clone",
+      "created_at": "Mon Jan 13 10:11:51 +0000 2025",
+      "retweets": 9,
+      "likes": 58,
+      "photo_urls": [],
+      "tweet_lang": "en"
+    },
+    {
+      "tweet_id": "1878745088551206937",
+      "tweet_user_name": "Fuel Pumps",
+      "tweet_user_nick": "Pumps_fuel",
+      "text": "When AI agents on Fuel ⛽⚡\n#Fuel https://t.co/VLfxrDEGhU",
+      "created_at": "Mon Jan 13 10:05:09 +0000 2025",
+      "retweets": 1,
+      "likes": 61,
+      "photo_urls": ["https://pbs.twimg.com/media/GhKks2KbYAAIdak.jpg"],
+      "tweet_lang": "en"
+    }
+  ]
+}
