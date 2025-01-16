@@ -1,5 +1,6 @@
 import json
 from typing import List
+from datetime import date, timedelta
 
 from fastapi import APIRouter, HTTPException
 from loguru import logger
@@ -39,10 +40,12 @@ class SearchResultTweet(BaseModel):
 )
 async def reply_search(request: HandleSearchRequest):
     search_batch = []
+    yesterday = date.today() - timedelta(days=1)
+    yesterday_str = yesterday.strftime("%Y-%m-%d")
 
     for phrase in request.phrases:
         params = SearchParams(
-            query=f'"{phrase}" min_replies:1 min_faves:30 min_retweets:1 lang:en since:2024-12-19 -filter:replies',
+            query=f'"{phrase}" min_replies:1 min_faves:30 min_retweets:1 lang:en since:{yesterday_str} -filter:replies',
             minimum_tweets=10
         )
         search_result = await search_tweets(params)
