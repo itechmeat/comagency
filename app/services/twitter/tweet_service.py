@@ -3,6 +3,7 @@ from app.config import get_twitter_credentials
 import asyncio
 import os
 from loguru import logger
+from app.models.schemas.tweet import DBTweet, TwitterTweet
 
 USE_TWITTER_MOCKS = os.getenv("USE_TWITTER_MOCKS", "false").lower() == "true"
 
@@ -133,4 +134,48 @@ class TwitterClient:
                 'tweet_lang': tweet.lang,
             }
         
-        return result 
+        return result
+
+async def save_twitter_tweet(supabase: Client, tweet_data: dict) -> DBTweet:
+    try:
+        twitter_tweet = TwitterTweet.model_validate(tweet_data)
+        db_tweet = twitter_tweet.to_db_tweet()
+
+        existing = supabase.table('tweets')\
+            .select('*')\
+            .eq('id', db_tweet.id)\
+            .execute()
+
+        if existing.data:
+            update_data = {
+                'id': db_tweet.id,
+                'text': db_tweet.text,
+                'author_id': db_tweet.author_id,
+                'author_name': db_tweet.author_name,
+                'author_username': db_tweet.author_username,
+                'author_photo': db_tweet.author_photo,
+                'lang': db_tweet.lang,
+                'retweets_count': db_tweet.retweets_count,
+                'likes_count': db_tweet.likes_count,
+                'photo_urls': db_tweet.photo_urls,
+                'meta_data': db_tweet.meta_data,
+                'updated_at': 'now()'
+            }
+
+            result = supabase.table('tweets')\
+                .upsert(update_data, on_conflict='id')\
+                .execute()
+        else:
+            logger.debug(f"Creating new tweet {db_tweet.id}")
+            result = supabase.table('tweets')\
+                .insert(db_tweet.model_dump())\
+                .execute()
+
+        if not result.data:
+            raise Exception("No data returned from database operation")
+
+        return DBTweet.model_validate(result.data[0])
+
+    except Exception as e:
+        logger.error(f"Error saving tweet: {str(e)}")
+        raise Exception(f"Error saving tweet: {str(e)}") from e
