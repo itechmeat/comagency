@@ -22,23 +22,27 @@ def process_tweet_details(tweet) -> TweetDetails:
         )
         
         if is_reply:
-            # If it's a reply, remove all initial @mentions
             words = text.split()
             non_mention_words = [w for w in words if not w.startswith('@')]
             display_text = ' '.join(non_mention_words) if non_mention_words else text
             
-        # Process author information safely
-        user = getattr(tweet, 'user', None)
-        if not user:
-            raise ValueError("Tweet user information is missing")
+        # Process author information safely - check both user and author attributes
+        author = None
+        if hasattr(tweet, 'user'):
+            user = getattr(tweet, 'user', None)
+            author = TweetAuthor(
+                id=str(getattr(user, 'id', '0')),
+                name=getattr(user, 'name', ''),
+                username=getattr(user, 'screen_name', ''),
+                profile_image_url=getattr(user, 'profile_image_url_https', None)
+            )
+        elif hasattr(tweet, 'author'):
+            # If author is already a TweetAuthor instance, use it directly
+            author = tweet.author
+
+        if not author:
+            raise ValueError("Tweet author information is missing")
             
-        author = TweetAuthor(
-            id=str(getattr(user, 'id', '0')),
-            name=getattr(user, 'name', ''),
-            username=getattr(user, 'screen_name', ''),
-            profile_image_url=getattr(user, 'profile_image_url_https', None)
-        )
-        
         # Get photo URLs if available
         photo_urls = []
         media = getattr(tweet, 'media', []) or []
