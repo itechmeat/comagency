@@ -1,6 +1,8 @@
 from datetime import datetime
-from typing import Optional, List
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
+
 
 class TweetAuthor(BaseModel):
     id: str
@@ -22,6 +24,7 @@ class TweetDetails(BaseModel):
     in_reply_to_screen_name: Optional[str] = None
     in_reply_to: Optional[str] = None
     photo_urls: List[str] = []
+    media: List[Dict[str, Any]] = Field(default_factory=list)
 
 class TweetThread(BaseModel):
     main_tweet: TweetDetails
@@ -56,6 +59,7 @@ class TwitterTweet(BaseModel):
     in_reply_to_screen_name: Optional[str] = None
     in_reply_to: Optional[str] = None
     photo_urls: List[str] = Field(default_factory=list)
+    media: List[Dict[str, Any]] = Field(default_factory=list)
 
     def to_db_tweet(self) -> 'DBTweetCreate':
         return DBTweetCreate(
@@ -69,6 +73,7 @@ class TwitterTweet(BaseModel):
             retweets_count=self.retweet_count,
             likes_count=self.favorite_count,
             photo_urls=self.photo_urls,
+            media=self.media,
             meta_data={
                 "display_text": self.display_text,
                 "in_reply_to_status_id": self.in_reply_to_status_id,
@@ -91,6 +96,7 @@ class DBTweetBase(BaseModel):
     meta_data: dict = Field(default_factory=dict)
     search_query_by: str = ""
     search_text_by: str = ""
+    media: List[Dict[str, Any]] = Field(default_factory=list)
 
 class DBTweetCreate(DBTweetBase):
     id: str

@@ -14,6 +14,6 @@ def handle_twitter_endpoint(operation_name: str):
             except Exception as e:
                 error_msg = f"Failed to {operation_name}: {str(e)}"
                 logger.error(error_msg)
-                raise HTTPException(status_code=400, detail=str(e))
+                raise HTTPException(status_code=400, detail=str(e)) from None
         return wrapper
     return decorator

@@ -1,11 +1,11 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from loguru import logger
 from supabase import Client
 
-from app.services.system.supabase import get_supabase
-from app.utils.twitter import process_tweet_details
 from app.models.schemas.tweet import TweetDetails, TwitterTweet
+from app.services.system.supabase import get_supabase
 from app.services.twitter.tweet_service import save_twitter_tweet
+from app.utils.twitter import process_tweet_details
 from app.utils.twitter.decorators import handle_twitter_endpoint
 
 from ..tweets.single_tweet import get_tweet_by_id
@@ -52,7 +52,8 @@ async def save_tweet(
         in_reply_to_user_id=processed_tweet.in_reply_to_user_id,
         in_reply_to_screen_name=processed_tweet.in_reply_to_screen_name,
         in_reply_to=processed_tweet.in_reply_to,
-        photo_urls=processed_tweet.photo_urls
+        photo_urls=processed_tweet.photo_urls,
+        media=processed_tweet.media
     )
 
     logger.info(f"💾  Saving tweet {tweet_id} to database...")

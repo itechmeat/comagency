@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
-from app.models.schemas.tweet import TweetDetails
 from loguru import logger
+
+from app.models.schemas.tweet import TweetDetails
 from app.utils.twitter import handle_twitter_request, process_tweet_details, twitter_client
 from app.utils.twitter.decorators import handle_twitter_endpoint
 

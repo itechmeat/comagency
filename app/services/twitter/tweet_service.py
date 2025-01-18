@@ -1,8 +1,10 @@
-from twikit import Client
-from app.config import get_twitter_credentials
 import asyncio
 import os
+
 from loguru import logger
+from twikit import Client
+
+from app.config import get_twitter_credentials
 from app.models.schemas.tweet import DBTweet, TwitterTweet
 
 USE_TWITTER_MOCKS = os.getenv("USE_TWITTER_MOCKS", "false").lower() == "true"
@@ -147,6 +149,7 @@ async def save_twitter_tweet(supabase: Client, tweet_data: dict) -> DBTweet:
             .execute()
 
         if existing.data:
+            logger.debug(f"Updating tweet {db_tweet.id}")
             update_data = {
                 'id': db_tweet.id,
                 'text': db_tweet.text,
@@ -158,6 +161,7 @@ async def save_twitter_tweet(supabase: Client, tweet_data: dict) -> DBTweet:
                 'retweets_count': db_tweet.retweets_count,
                 'likes_count': db_tweet.likes_count,
                 'photo_urls': db_tweet.photo_urls,
+                'media': db_tweet.media,
                 'meta_data': db_tweet.meta_data,
                 'updated_at': 'now()'
             }
