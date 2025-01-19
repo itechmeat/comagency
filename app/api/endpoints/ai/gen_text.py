@@ -1,8 +1,11 @@
 import os
+
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 from pydantic_ai import Agent
 from pydantic_ai.models.groq import GroqModel
+
 from app.utils.twitter.decorators import handle_twitter_endpoint
 
 router = APIRouter()
@@ -10,15 +13,22 @@ load_dotenv()
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
+class GenTextRequest(BaseModel):
+    prompt: str
+    model_name: str = 'llama-3.1-70b-versatile'
+
 @router.post(
-    "/tasks/ask-model",
-    tags=["tasks"],
+    "/gen_text",
+    tags=["ai"],
     response_model=str,
-    summary="Ask a question to the language model",
-    description="Sends a prompt to the specified language model and returns the response."
+    summary="Generate text",
+    description="Sends a prompt to the specified text generation model and returns the text."
 )
-@handle_twitter_endpoint("ask model")
-async def ask_model(prompt: str, model_name: str = 'llama-3.1-70b-versatile'):
+@handle_twitter_endpoint("generate text")
+async def gen_text(request: GenTextRequest):
+    prompt = request.prompt
+    model_name = request.model_name
+
     if not GROQ_API_KEY:
         raise HTTPException(status_code=500, detail="GROQ API key not configured")
     

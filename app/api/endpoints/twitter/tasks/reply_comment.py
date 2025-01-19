@@ -5,14 +5,15 @@ from fastapi import APIRouter, HTTPException
 from loguru import logger
 from pydantic import BaseModel
 
+from app.api.endpoints.ai.gen_text import gen_text
 from app.models.schemas.tasks import HandleMentionRequest
-from app.models.schemas.tweet import TweetDetails, CreateTweetRequest
+from app.models.schemas.tweet import CreateTweetRequest, TweetDetails
 from app.utils.twitter.decorators import handle_twitter_endpoint
+
 from ..tweets.like import like_tweet
+from ..tweets.new import create_tweet
 from ..tweets.replies import get_tweet_replies
 from ..tweets.single_tweet import get_tweet_by_id
-from ..tweets.new import create_tweet
-from .ask_model import ask_model
 
 router = APIRouter()
 
@@ -95,7 +96,7 @@ The reply_text should be a direct response to the tweet that:
 The answer must contain only the object and nothing else, this is critically important.
 """
 
-    response = await ask_model(llm_request)
+    response = await gen_text(llm_request)
 
     try:
         structured_response = json.loads(response)

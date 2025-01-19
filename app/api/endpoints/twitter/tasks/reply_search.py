@@ -6,11 +6,11 @@ from fastapi import APIRouter, HTTPException
 from loguru import logger
 from pydantic import BaseModel
 
+from app.api.endpoints.ai.gen_text import gen_text
 from app.models.schemas.tweet import TweetDetails, CreateTweetRequest
 from ..tweets.search import search_tweets
 from ..tweets.like import like_tweet
 from ..tweets.new import create_tweet
-from .ask_model import ask_model
 from app.models.schemas.search import SearchParams
 
 router = APIRouter()
@@ -173,7 +173,7 @@ DO:
 Both fields should be strings.
 """
 
-    answer = await ask_model(llm_request)
+    answer = await gen_text(llm_request)
     logger.info(f"🤖  Model answer: {answer}")
 
 
