@@ -9,7 +9,7 @@ from supabase import Client
 from app.models.schemas.search import SearchParams
 from app.services.system.supabase import get_supabase
 from app.services.twitter.tweet_service import save_twitter_tweets_batch
-from app.utils.twitter.normalizer import normalize_tweet_data
+from app.utils.twitter.normalizer import normalize_search_tweet_data
 
 from ..tweets.search import search_tweets
 
@@ -39,10 +39,6 @@ async def save_search(request: HandleSearchRequest, supabase: Client = supabase_
         )
         search_result = await search_tweets(params)
         tweets = getattr(search_result, 'tweets', [])
-        # Log the structure of the first tweet for debugging
-        if tweets:
-            logger.debug(f"Tweet structure: {dir(tweets[0])}")
-            logger.debug(f"Tweet data: {tweets[0].dict()}")
         search_batch.append({"phrase": phrase, "tweets": tweets})
 
     results = []
@@ -52,15 +48,11 @@ async def save_search(request: HandleSearchRequest, supabase: Client = supabase_
     for batch in search_batch:
         for tweet in batch['tweets']:
             tweet_data = tweet.dict()
-            tweet_dict = normalize_tweet_data(tweet_data)
+            tweet_dict = normalize_search_tweet_data(tweet_data)
 
             if tweet_dict['id'] and tweet_dict['id'] not in seen_ids:
                 seen_ids.add(tweet_dict['id'])
                 results.append(tweet_dict)
-
-    # Log the first result for debugging
-    if results:
-        logger.debug(f"First normalized tweet: {results[0]}")
 
     # Save the unique tweets to the database
     if results:

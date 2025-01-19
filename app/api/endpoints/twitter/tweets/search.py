@@ -11,7 +11,8 @@ router = APIRouter()
 async def get_tweets(params: SearchParams | TimelineParams):
     logger.info('🔎  Fetching tweets from Twitter API...')
     if isinstance(params, SearchParams):
-        return await twitter_client.client.search_tweet(params.query, product='Latest')
+        query = str(params.query)
+        return await twitter_client.client.search_tweet(query, product='Latest')
     elif isinstance(params, TimelineParams):
         # Split requests for timeline and latest_timeline
         if getattr(params, 'is_latest', False):

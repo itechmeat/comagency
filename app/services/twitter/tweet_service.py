@@ -6,7 +6,6 @@ from loguru import logger
 from twikit import Client
 
 from app.models.schemas.tweet import DBTweet, TwitterTweet
-from app.utils.twitter.normalizer import normalize_tweet_data
 
 USE_TWITTER_MOCKS = os.getenv("USE_TWITTER_MOCKS", "false").lower() == "true"
 
@@ -34,11 +33,15 @@ async def save_twitter_tweet(supabase: Client, tweet_data: dict) -> DBTweet:
                 'lang': db_tweet.lang,
                 'retweets_count': db_tweet.retweets_count,
                 'likes_count': db_tweet.likes_count,
-                'photo_urls': db_tweet.photo_urls,
-                'media': db_tweet.media,
-                'meta_data': db_tweet.meta_data,
                 'updated_at': 'now()'
             }
+
+            if db_tweet.photo_urls:
+                update_data['photo_urls'] = db_tweet.photo_urls
+            if db_tweet.media is not None and len(db_tweet.media) > 0:
+                update_data['media'] = db_tweet.media
+            if db_tweet.meta_data:
+                update_data['meta_data'] = db_tweet.meta_data
 
             result = supabase.table('tweets')\
                 .upsert(update_data, on_conflict='id')\
@@ -66,7 +69,7 @@ async def save_twitter_tweets_batch(
     try:
         db_tweets = []
         for tweet_data in tweets_data:
-            normalized_data = normalize_tweet_data(tweet_data)
+            normalized_data = tweet_data
             twitter_tweet = TwitterTweet.model_validate(normalized_data)
             db_tweets.append(twitter_tweet.to_db_tweet())
 
@@ -92,10 +95,12 @@ async def save_twitter_tweets_batch(
                 'lang': db_tweet.lang,
                 'retweets_count': db_tweet.retweets_count,
                 'likes_count': db_tweet.likes_count,
-                'photo_urls': db_tweet.photo_urls,
-                'media': db_tweet.media,
-                'meta_data': db_tweet.meta_data
+                'media': db_tweet.media or [],
+                'photo_urls': db_tweet.photo_urls or [],
             }
+
+            if db_tweet.meta_data:
+                tweet_dict['meta_data'] = db_tweet.meta_data
 
             if db_tweet.id in existing_ids:
                 tweet_dict['updated_at'] = 'now()'
@@ -108,7 +113,7 @@ async def save_twitter_tweets_batch(
         for i in range(0, len(updates), batch_size):
             batch = updates[i:i + batch_size]
             if batch:
-                logger.debug(f"Processing update batch {i // batch_size + 1}, size: {len(batch)}")
+                logger.debug(f"💾  Updating {len(batch)} tweets")
                 result = supabase.table('tweets')\
                     .upsert(batch, on_conflict='id')\
                     .execute()
@@ -117,7 +122,7 @@ async def save_twitter_tweets_batch(
         for i in range(0, len(inserts), batch_size):
             batch = inserts[i:i + batch_size]
             if batch:
-                logger.debug(f"Processing insert batch {i // batch_size + 1}, size: {len(batch)}")
+                logger.debug(f"💾  Inserting {len(batch)} tweets")
                 result = supabase.table('tweets')\
                     .insert(batch)\
                     .execute()
