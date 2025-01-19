@@ -5,7 +5,7 @@ from supabase import Client
 from app.models.schemas.tweet import TweetDetails, TwitterTweet
 from app.services.system.supabase import get_supabase
 from app.services.twitter.tweet_service import save_twitter_tweet
-from app.utils.twitter import process_tweet_details
+from app.utils.twitter import process_tweet_details, normalize_tweet_data
 from app.utils.twitter.decorators import handle_twitter_endpoint
 
 from ..tweets.single_tweet import get_tweet_by_id
@@ -35,26 +35,7 @@ async def save_tweet(
 
     processed_tweet = process_tweet_details(tweet_details)
 
-    twitter_tweet = TwitterTweet(
-        id=processed_tweet.id,
-        text=processed_tweet.text,
-        display_text=processed_tweet.display_text,
-        lang=processed_tweet.lang,
-        retweet_count=processed_tweet.retweet_count,
-        favorite_count=processed_tweet.favorite_count,
-        author={
-            "id": processed_tweet.author.id,
-            "name": processed_tweet.author.name,
-            "username": processed_tweet.author.username,
-            "profile_image_url": processed_tweet.author.profile_image_url
-        },
-        in_reply_to_status_id=processed_tweet.in_reply_to_status_id,
-        in_reply_to_user_id=processed_tweet.in_reply_to_user_id,
-        in_reply_to_screen_name=processed_tweet.in_reply_to_screen_name,
-        in_reply_to=processed_tweet.in_reply_to,
-        photo_urls=processed_tweet.photo_urls,
-        media=processed_tweet.media
-    )
+    twitter_tweet = TwitterTweet(**normalize_tweet_data(processed_tweet.model_dump()))
 
     logger.info(f"💾  Saving tweet {tweet_id} to database...")
     await save_twitter_tweet(supabase, twitter_tweet.model_dump())

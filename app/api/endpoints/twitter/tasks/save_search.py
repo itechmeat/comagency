@@ -9,6 +9,7 @@ from supabase import Client
 from app.models.schemas.search import SearchParams
 from app.services.system.supabase import get_supabase
 from app.services.twitter.tweet_service import save_twitter_tweets_batch
+from app.utils.twitter.normalizer import normalize_tweet_data
 
 from ..tweets.search import search_tweets
 
@@ -51,27 +52,7 @@ async def save_search(request: HandleSearchRequest, supabase: Client = supabase_
     for batch in search_batch:
         for tweet in batch['tweets']:
             tweet_data = tweet.dict()
-            # Convert TweetData object to dictionary format that matches TwitterTweet model
-            tweet_dict = {
-                'id': tweet_data['tweet_id'],
-                'text': tweet_data['text'],
-                'display_text': tweet_data['text'],  # Required field
-                'retweet_count': tweet_data['retweets'],
-                'favorite_count': tweet_data['likes'],
-                'author': {
-                    'id': tweet_data['tweet_user_nick'],
-                    'name': tweet_data['tweet_user_name'],
-                    'username': tweet_data['tweet_user_nick'],
-                    'profile_image_url': None
-                },
-                'lang': tweet_data['tweet_lang'],
-                'photo_urls': tweet_data.get('photo_urls', []),
-                'media': [],
-                'in_reply_to_status_id': None,
-                'in_reply_to_user_id': None,
-                'in_reply_to_screen_name': None,
-                'in_reply_to': None
-            }
+            tweet_dict = normalize_tweet_data(tweet_data)
 
             if tweet_dict['id'] and tweet_dict['id'] not in seen_ids:
                 seen_ids.add(tweet_dict['id'])

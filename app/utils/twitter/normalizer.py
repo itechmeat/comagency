@@ -5,7 +5,7 @@ def normalize_tweet_data(tweet_data: Dict[str, Any]) -> Dict[str, Any]:
     return {
         'id': tweet_data['id'],
         'text': tweet_data['text'],
-        'display_text': tweet_data['text'],  # Required field
+        'display_text': tweet_data['display_text'],
         'retweet_count': tweet_data['retweet_count'],
         'favorite_count': tweet_data['favorite_count'],
         'author': {

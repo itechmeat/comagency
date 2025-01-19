@@ -27,12 +27,12 @@ def process_tweet_details(tweet) -> TweetDetails:
         if not author:
             raise ValueError("Tweet author information is missing")
             
-        # Get media information - с дополнительными проверками
+        # Get media information
         media = []
         tweet_media = getattr(tweet, 'media', None)
         if tweet_media is not None:
             if isinstance(tweet_media, (list, tuple)):
-                media = list(tweet_media)  # Преобразуем в список для безопасности
+                media = list(tweet_media)
             else:
                 logger.warning(f"Unexpected media type: {type(tweet_media)}")
 
