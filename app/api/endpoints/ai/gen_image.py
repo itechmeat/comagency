@@ -1,12 +1,13 @@
-import os
-import uuid
-import stat
 import logging
-import httpx
+import os
+import stat
+import uuid
 from datetime import datetime
 
+import httpx
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 from together import Together
 
 from app.utils.twitter.decorators import handle_twitter_endpoint
@@ -33,6 +34,10 @@ if not os.path.exists(IMAGE_DIR):
     # Set write permissions for the directory
     os.chmod(IMAGE_DIR, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
 
+class GenImageRequest(BaseModel):
+    prompt: str
+    model_name: str = 'black-forest-labs/FLUX.1-schnell-Free'
+
 @router.post(
     "/gen_image",
     tags=["ai"],
@@ -41,7 +46,10 @@ if not os.path.exists(IMAGE_DIR):
     description="Sends a prompt to the specified image generation model and returns the image."
 )
 @handle_twitter_endpoint("generate image")
-async def gen_image(prompt: str, model_name: str = 'black-forest-labs/FLUX.1-schnell-Free'):
+async def gen_image(request: GenImageRequest):
+    prompt = request.prompt
+    model_name = request.model_name
+
     if not TOGETHER_API_KEY:
         raise HTTPException(status_code=500, detail="TOGETHER API key not configured")
     

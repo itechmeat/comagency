@@ -2,6 +2,7 @@ import os
 
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
 
@@ -12,6 +13,10 @@ load_dotenv()
 
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 
+class GenTextTogetherRequest(BaseModel):
+    prompt: str
+    model_name: str = 'meta-llama/Llama-3.3-70B-Instruct-Turbo'
+
 @router.post(
     "/gen_text_together",
     tags=["ai"],
@@ -20,7 +25,10 @@ TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
     description="Sends a prompt to the specified text generation model and returns the text."
 )
 @handle_twitter_endpoint("generate text")
-async def gen_text_together(prompt: str, model_name: str = 'meta-llama/Llama-3.3-70B-Instruct-Turbo'):
+async def gen_text_together(request: GenTextTogetherRequest):
+    prompt = request.prompt
+    model_name = request.model_name
+
     if not TOGETHER_API_KEY:
         raise HTTPException(status_code=500, detail="TOGETHER API key not configured")
     
