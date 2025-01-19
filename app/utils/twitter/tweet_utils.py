@@ -1,9 +1,5 @@
-from app.services.twitter.tweet_service import TwitterClient
 from app.models.schemas.tweet import TweetDetails, TweetAuthor
 from loguru import logger
-
-# Create shared instances
-twitter_client = TwitterClient() 
 
 def process_tweet_details(tweet) -> TweetDetails:
     """Convert Twitter API tweet object to TweetDetails model"""
