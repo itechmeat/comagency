@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
-from app.models.schemas.tweet import TweetDetails
 from loguru import logger
+
+from app.models.schemas.tweet import TweetDetails
 from app.utils.twitter import handle_twitter_request, process_tweet_details, twitter_client
 from app.utils.twitter.decorators import handle_twitter_endpoint
 
@@ -25,5 +26,7 @@ async def get_tweet_by_id(tweet_id: str):
         return tweet
 
     tweet_details = await handle_twitter_request(fetch_tweet)
+    processed_tweet = process_tweet_details(tweet_details)
     logger.info(f"✅  Successfully fetched tweet {tweet_details.id}")
-    return process_tweet_details(tweet_details)
+
+    return processed_tweet
