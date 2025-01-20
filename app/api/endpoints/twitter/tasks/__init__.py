@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from app.api.endpoints.twitter.tasks.write_tweet import router as write_tweet_router
 from app.api.endpoints.twitter.tasks.reply_mention import router as reply_mention_router
 from app.api.endpoints.twitter.tasks.reply_comment import router as reply_comment_router
 from app.api.endpoints.twitter.tasks.reply_search import router as reply_search_router
@@ -7,6 +8,7 @@ from app.api.endpoints.twitter.tasks.save_search import router as save_search_ro
 
 router = APIRouter()
 
+router.include_router(write_tweet_router, tags=["tasks"])
 router.include_router(reply_mention_router, tags=["tasks"])
 router.include_router(reply_comment_router, tags=["tasks"])
 router.include_router(reply_search_router, tags=["tasks"])
