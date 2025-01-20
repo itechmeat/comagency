@@ -83,5 +83,4 @@ def process_tweet_details(tweet) -> TweetDetails:
         )
     except Exception as e:
         logger.error(f"Error processing tweet details: {str(e)}")
-        logger.debug(f"Tweet object: {tweet}")
         raise

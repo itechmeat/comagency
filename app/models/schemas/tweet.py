@@ -123,3 +123,25 @@ class DBTweet(DBTweetBase):
 
     class Config:
         from_attributes = True
+
+class DBPostBase(BaseModel):
+    text: str
+    lang: str = "en"
+    retweets_count: int = 0
+    likes_count: int = 0
+    photo_urls: List[str] = Field(default_factory=list)
+    meta_data: dict = Field(default_factory=dict)
+    media: List[Dict[str, Any]] = Field(default_factory=list)
+
+class DBPostCreate(DBPostBase):
+    id: str
+
+class DBPost(DBPostBase):
+    id: str
+    created_at: datetime
+    updated_at: datetime
+    reply_to: Optional[str] = None
+    sentiment: str = ""
+
+    class Config:
+        from_attributes = True

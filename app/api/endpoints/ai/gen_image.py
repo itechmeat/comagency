@@ -1,4 +1,3 @@
-import logging
 import os
 import stat
 import uuid
@@ -7,6 +6,7 @@ from datetime import datetime
 import httpx
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
+from loguru import logger
 from pydantic import BaseModel
 from together import Together
 
@@ -18,12 +18,7 @@ load_dotenv()
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 BASE_IMAGE_DIR = os.path.join(os.path.dirname(__file__), "../../../assets/images")
 
-logging.basicConfig(level=logging.DEBUG)
-
 client = Together(api_key=TOGETHER_API_KEY)
-
-# Log the current working directory
-logging.debug(f"Current working directory: {os.getcwd()}")
 
 # Create a directory for today's date
 today_date = datetime.now().strftime("%d-%m-%Y")
@@ -77,18 +72,17 @@ async def gen_image(request: GenImageRequest):
                 with open(file_path, "wb") as image_file:
                     image_file.write(image_response.content)
             except Exception as e:
-                logging.error(f"Error saving image to {file_path}: {e}")
+                logger.error(f"Error saving image to {file_path}: {e}")
                 raise HTTPException(status_code=500, detail=f"Error saving image: {e}") from e
             
             if not os.path.exists(file_path):
-                logging.error(f"File was not created: {file_path}")
+                logger.error(f"File was not created: {file_path}")
                 raise HTTPException(status_code=500, detail=f"File was not created: {file_path}")
             else:
-                logging.debug(f"File created successfully: {file_path}")
+                logger.error(f"File created successfully: {file_path}")
 
             # Set write permissions for the file
             os.chmod(file_path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
-            logging.debug(f"Set permissions for file: {file_path}")
             
             response_object = {
                 "folder": today_date,

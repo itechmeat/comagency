@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 from loguru import logger
 from twikit import Client
 
-from app.models.schemas.tweet import DBTweet, TwitterTweet
+from app.models.schemas.tweet import DBTweet, TwitterTweet, DBPost, DBPostCreate
 
 USE_TWITTER_MOCKS = os.getenv("USE_TWITTER_MOCKS", "false").lower() == "true"
 
@@ -133,3 +133,64 @@ async def save_twitter_tweets_batch(
     except Exception as e:
         logger.error(f"Error in batch processing tweets: {str(e)}")
         raise Exception(f"Batch processing failed: {str(e)}") from e
+
+async def save_twitter_post(supabase: Client, tweet_data: dict) -> DBPost:
+    try:
+        twitter_tweet = TwitterTweet.model_validate(tweet_data)
+        db_post = DBPostCreate(
+            id=twitter_tweet.id,
+            text=twitter_tweet.text,
+            lang=twitter_tweet.lang,
+            retweets_count=twitter_tweet.retweet_count,
+            likes_count=twitter_tweet.favorite_count,
+            photo_urls=twitter_tweet.photo_urls,
+            media=twitter_tweet.media,
+            meta_data={
+                "display_text": twitter_tweet.display_text,
+                "in_reply_to_status_id": twitter_tweet.in_reply_to_status_id,
+                "in_reply_to_user_id": twitter_tweet.in_reply_to_user_id,
+                "in_reply_to_screen_name": twitter_tweet.in_reply_to_screen_name,
+                "in_reply_to": twitter_tweet.in_reply_to
+            }
+        )
+
+        existing = supabase.table('posts')\
+            .select('*')\
+            .eq('id', db_post.id)\
+            .execute()
+
+        if existing.data:
+            logger.debug(f"Updating post {db_post.id}")
+            update_data = {
+                'id': db_post.id,
+                'text': db_post.text,
+                'lang': db_post.lang,
+                'retweets_count': db_post.retweets_count,
+                'likes_count': db_post.likes_count,
+                'updated_at': 'now()'
+            }
+
+            if db_post.photo_urls:
+                update_data['photo_urls'] = db_post.photo_urls
+            if db_post.media is not None and len(db_post.media) > 0:
+                update_data['media'] = db_post.media
+            if db_post.meta_data:
+                update_data['meta_data'] = db_post.meta_data
+
+            result = supabase.table('posts')\
+                .upsert(update_data, on_conflict='id')\
+                .execute()
+        else:
+            logger.debug(f"Creating new post {db_post.id}")
+            result = supabase.table('posts')\
+                .insert(db_post.model_dump())\
+                .execute()
+
+        if not result.data:
+            raise Exception("No data returned from database operation")
+
+        return DBPost.model_validate(result.data[0])
+
+    except Exception as e:
+        logger.error(f"Error saving post: {str(e)}")
+        raise Exception(f"Error saving post: {str(e)}") from e
